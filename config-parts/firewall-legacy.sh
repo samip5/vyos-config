@@ -1,5 +1,38 @@
 #!/bin/vbash
 
+set group address-group WORK-KAPSI address '91.232.154.72'
+set group address-group WORK-KAPSI address '91.232.154.12'
+set group address-group WORK-KAPSI address '93.174.197.82'
+set group address-group k8s_ingress address '10.96.69.80'
+set group address-group k8s_mqtt address '192.168.10.10'
+set group address-group k8s_nodes address '10.0.110.10-10.0.110.30'
+set group address-group k8s_nodes address '10.0.105.10-10.0.105.200'
+set group address-group nas address '192.168.2.2'
+set group address-group router-addresses address '192.168.2.1'
+set group address-group router-addresses address '127.0.0.1'
+set group address-group vyos_coredns address '10.5.0.3'
+set group address-group vyos_dnsdist address '10.5.0.4'
+set group address-group vyos_unifi address '10.5.0.10'
+
+set group interface-group IG_containers interface 'pod-containers'
+set group interface-group IG_iot interface 'eth8.50'
+set group interface-group IG_lan interface 'eth8.10'
+set group interface-group IG_wan interface 'eth7'
+
+set group ipv6-address-group router-addresses-ipv6 address 'fe80::227c:14ff:fef2:37dd'
+set group ipv6-address-group router-addresses-ipv6 address '::1'
+set group ipv6-address-group router-addresses-ipv6 address '2001:14ba:1600::260a:f61f'
+set group ipv6-network-group link-local network 'fe80::/64'
+set group ipv6-network-group link-local network 'fe80:3::/64'
+
+set group network-group kapsi network '10.0.0.0/24'
+set group network-group kapsi network '10.0.1.0/24'
+set group network-group kapsi network '10.13.37.0/24'
+set group network-group kapsi network '172.17.50.0/24'
+set group network-group kapsi network '10.0.199.0/24'
+
+set group port-group wireguard port '51820'
+
 set interface eth7 in name 'wan-in'
 set interface eth7 local name 'wan-local'
 
@@ -99,7 +132,6 @@ set ipv6-name WANv6_Tunnel_IN rule 40 state related 'enable'
 set ipv6-name WANv6_Tunnel_IN rule 41 action 'drop'
 set ipv6-name WANv6_Tunnel_IN rule 41 description 'Drop other traffic to k8s svc cidr from outside'
 set ipv6-name WANv6_Tunnel_IN rule 41 destination address '2001:67c:1104:fdb::/112'
-
 set ipv6-name WANv6_Tunnel_LOCAL default-action 'drop'
 set ipv6-name WANv6_Tunnel_LOCAL rule 1 action 'accept'
 set ipv6-name WANv6_Tunnel_LOCAL rule 1 description 'Allow established/related sessions'
@@ -120,7 +152,6 @@ set ipv6-name WANv6_Tunnel_LOCAL rule 5 action 'accept'
 set ipv6-name WANv6_Tunnel_LOCAL rule 5 destination group network-group 'link-local'
 
 set name wan-in default-action 'drop'
-set name wan-in enable-default-log
 set name wan-in rule 1 action 'accept'
 set name wan-in rule 1 description 'Allow established/related'
 set name wan-in rule 1 state established 'enable'
@@ -131,9 +162,14 @@ set name wan-in rule 2 destination port '80,443'
 set name wan-in rule 2 inbound-interface interface-name 'eth7'
 set name wan-in rule 2 outbound-interface interface-name 'eth8.105'
 set name wan-in rule 2 protocol 'tcp'
+set name wan-in rule 3 action 'accept'
+set name wan-in rule 3 description 'Allow Minecraft EDU in'
+set name wan-in rule 3 destination port '19132'
+set name wan-in rule 3 inbound-interface interface-name 'eth7'
+set name wan-in rule 3 outbound-interface interface-name 'eth8.10'
+set name wan-in rule 3 protocol 'tcp_udp'
 
 set name wan-local default-action 'drop'
-set name wan-local enable-default-log
 set name wan-local rule 1 action 'accept'
 set name wan-local rule 1 description 'Allow ICMPv4'
 set name wan-local rule 1 icmp type-name 'echo-request'
