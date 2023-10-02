@@ -25,8 +25,13 @@ END
   chown vyos:users /home/vyos/.bash_aliases
 fi
 
-# Disable EEE on network interfaces as a workaround to i225/i226 issues
+# Disable EEE on network interfaces as a workaround to i225/i226 issues but skip ixgbe interfaces
 while read -r interface
 do
-  sudo ethtool --set-eee "${interface}" eee off
+  driver=$(readlink /sys/class/net/"${interface}"/device/driver/module)
+  if [[ $driver != *ixgbe* ]]; then
+    sudo ethtool --set-eee "${interface}" eee off
+  else
+    echo "Skipping ${interface} as it uses ixgbe driver"
+  fi
 done < <(ls -l /sys/class/net/*/device/driver/module | cut -d/ -f5)
