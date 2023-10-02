@@ -19,3 +19,7 @@ set service ntp server time2.vyos.net
 set service ntp server time3.vyos.net
 
 set service ssh port '22'
+set service ssh dynamic-protection allow-from '192.168.2.10'
+set service ssh listen-address '192.168.99.1'
+set service ssh listen-address '192.168.2.1'
+set service ssh listen-address '2001:14ba:1600::260a:f61f'
