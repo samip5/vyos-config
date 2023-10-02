@@ -3,7 +3,7 @@
 
 ; SOA Records
 $TTL 3600
-$ORIGIN skylab.fi..
+$ORIGIN skylab.fi.
 @ 3600 IN SOA gateway.skylab.fi. gateway.skylab.fi. (
   1695577233         ; serial number (epoch timestamp)
   7200               ; refresh period
@@ -14,6 +14,9 @@ $ORIGIN skylab.fi..
 
 ; NS Records
 @                          IN  NS gateway.skylab.fi.
+
+gateway  IN A 192.168.2.1
+pihole   IN A 10.5.0.7
 
 ; Containers
 

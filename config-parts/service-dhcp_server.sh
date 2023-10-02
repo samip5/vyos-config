@@ -27,7 +27,6 @@ set dhcp-server shared-network-name IoT subnet 10.0.50.0/24 static-mapping ESP_5
 
 set dhcp-server shared-network-name LAN authoritative
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 default-router '192.168.2.1'
-set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 name-server '1.1.1.1'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 name-server '192.168.2.1'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 range 0 start '192.168.2.10'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 range 0 stop '192.168.2.200'
