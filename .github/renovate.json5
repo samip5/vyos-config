@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>bjw-s/renovate-config",
+    "github>bjw-s/renovate-config:automerge-github-actions",
+  ],
+  "platform": "github",
+  "username": "samip5-bot[bot]",
+  "gitAuthor": "samip5-bot[bot] <118629685+samip5-bot@users.noreply.github.com>",
+  "repositories": ["samip5/vyos-config"],
+  "regexManagers": [
+    {
+      "description": ["Generic Docker image Regex manager"],
+      "fileMatch": [
+        "config-parts/.+\\.sh$"
+      ],
+      "matchStrings": [
+        "set container name .* image '?(?<depName>.*?):(?<currentValue>[^'\n]*=?)'?"
+      ],
+      "datasourceTemplate": "docker"
+    },
+  ]
+}
