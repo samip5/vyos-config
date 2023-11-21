@@ -1,19 +1,10 @@
 #!/bin/vbash
 
-set container name auroraboot allow-host-networks
-set container name auroraboot command '--cloud-config /cloud-init.yaml'
-set container name auroraboot disable
-set container name auroraboot image 'quay.io/kairos/auroraboot:latest'
-set container name auroraboot volume cloud-init destination '/cloud-init.yaml'
-set container name auroraboot volume cloud-init source '/config/containers/auroraboot/cloud-init.yaml'
-set container name auroraboot volume storage destination '/storage'
-set container name auroraboot volume storage source '/config/containers/auroraboot/storage'
-
 set container name bind cap-add 'net-bind-service'
 set container name bind command '/usr/sbin/named -4 -f -c /etc/bind/named.conf -u bind'
 set container name bind image 'docker.io/internetsystemsconsortium/bind9:9.19'
 set container name bind memory '0'
-set container name bind network containers address '172.16.9.3'
+set container name bind network containers address '172.16.9.53'
 set container name bind restart 'on-failure'
 set container name bind shared-memory '0'
 set container name bind volume cache destination '/var/cache/bind'
@@ -23,23 +14,13 @@ set container name bind volume config destination '/etc/bind'
 set container name bind volume config mode 'rw'
 set container name bind volume config source '/config/containers/bind/config'
 
-set container name cf-ddns allow-host-networks
-# set container name cf-ddns environment CF_API_TOKEN value ''
-set container name cf-ddns environment DOMAINS value 'r.home.skym.fi'
-set container name cf-ddns environment PGID value '100'
-set container name cf-ddns environment PUID value '1002'
-set container name cf-ddns environment TZ value 'Europe/Helsinki'
-set container name cf-ddns image 'docker.io/favonia/cloudflare-ddns:1.10.1'
-set container name cf-ddns memory '0'
-set container name cf-ddns restart 'on-failure'
-set container name cf-ddns shared-memory '0'
-
-set container name dnsdist arguments '--log-timestamps'
+set container name dnsdist arguments '-v --log-timestamps'
 set container name dnsdist cap-add 'net-bind-service'
 set container name dnsdist environment TZ value 'Europe/Helsinki'
 set container name dnsdist image 'docker.io/powerdns/dnsdist-18:1.8.2'
 set container name dnsdist memory '0'
-set container name dnsdist network containers address '172.16.9.4'
+set container name dnsdist network containers address '2001:67c:1104:9::4'
+set container name dnsdist network containers address '172.16.9.5'
 set container name dnsdist port dns destination '53'
 set container name dnsdist port dns listen-address '192.168.2.1'
 set container name dnsdist port dns listen-address '10.0.50.1'
@@ -59,23 +40,6 @@ set container name dnsdist shared-memory '0'
 set container name dnsdist volume config destination '/etc/dnsdist/dnsdist.conf'
 set container name dnsdist volume config mode 'ro'
 set container name dnsdist volume config source '/config/containers/dnsdist/config/dnsdist.conf'
-
-set container name lego-auto allow-host-networks
-set container name lego-auto disable
-# set container name lego-auto environment CF_DNS_API_TOKEN value ''
-set container name lego-auto environment LA_CACHEDIR value '/config/.cache'
-set container name lego-auto environment LA_DATADIR value '/config'
-set container name lego-auto environment LA_DOMAINS value '*.skylab.fi'
-set container name lego-auto environment LA_EMAIL value 'postmaster@skylab.fi'
-set container name lego-auto environment LA_PROVIDER value 'cloudflare'
-set container name lego-auto environment TZ value 'Europe/Amsterdam'
-set container name lego-auto image 'ghcr.io/bjw-s/lego-auto:v0.1.0'
-set container name lego-auto memory '0'
-set container name lego-auto restart 'on-failure'
-set container name lego-auto shared-memory '0'
-set container name lego-auto volume datadir destination '/config'
-set container name lego-auto volume datadir mode 'rw'
-set container name lego-auto volume datadir source '/config/secrets/certs/_.skylab.fi'
 
 set container name node-exporter allow-host-networks
 set container name node-exporter environment procfs value '/host/proc'
@@ -100,7 +64,7 @@ set container name unifi environment TZ value 'Europe/Helsinki'
 set container name unifi environment UNIFI_GID value '999'
 set container name unifi environment UNIFI_STDOUT value 'true'
 set container name unifi environment UNIFI_UID value '999'
-set container name unifi image 'ghcr.io/jacobalberty/unifi-docker:v7.5.174'
+set container name unifi image 'ghcr.io/jacobalberty/unifi-docker:v7.5.176'
 set container name unifi memory '0'
 set container name unifi network containers address '172.16.9.10'
 set container name unifi restart 'on-failure'
@@ -110,6 +74,4 @@ set container name unifi volume data mode 'rw'
 set container name unifi volume data source '/config/containers/unifi'
 
 set container network containers prefix '172.16.9.0/24'
-
-set container network containers prefix '172.16.9.0/24'
-
+set container network containers prefix '2001:67c:1104:9::/64'

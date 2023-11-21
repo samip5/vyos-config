@@ -36,6 +36,8 @@ set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping NAS
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping NAS mac-address '00:11:32:c6:fe:d5'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping home-srv ip-address '192.168.2.10'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping home-srv mac-address 'd8:cb:8a:1d:a0:d2'
+set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping ryzen-gaming ip-address '192.168.2.98'
+set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping ryzen-gaming mac-address '18:c0:4d:82:53:5f'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping tube_zb_gw ip-address '192.168.2.112'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 static-mapping tube_zb_gw mac-address 'c4:5b:be:8c:09:b3'
 set dhcp-server shared-network-name LAN subnet 192.168.2.0/24 subnet-parameters 'option ubnt.unifi-address 10.5.0.10;'
