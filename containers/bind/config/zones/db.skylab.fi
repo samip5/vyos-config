@@ -5,7 +5,7 @@
 $TTL 3600
 $ORIGIN skylab.fi.
 @ 3600 IN SOA gateway.skylab.fi. gateway.skylab.fi. (
-  1698576243         ; serial number (epoch timestamp)
+  1707165806         ; serial number (epoch timestamp)
   7200               ; refresh period
   3600               ; retry period
   1209600            ; expire time
@@ -17,6 +17,8 @@ $ORIGIN skylab.fi.
 
 gateway  IN A 192.168.2.1
 nas      IN A 192.168.2.2
+printer  IN A 10.0.50.18
+
 
 ; Containers
 
