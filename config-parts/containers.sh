@@ -90,7 +90,7 @@ set container name librenms-dispatcher volume config destination '/data'
 set container name librenms-dispatcher volume config mode 'rw'
 set container name librenms-dispatcher volume config source '/config/containers/librenms/data'
 set container name librenms-redis environment TZ value 'Europe/Helsinki'
-set container name librenms-redis image 'redis:5.0-alpine'
+set container name librenms-redis image 'redis:7.2-alpine'
 set container name librenms-redis network containers address '172.16.9.23'
 
 set container name node-exporter allow-host-networks
