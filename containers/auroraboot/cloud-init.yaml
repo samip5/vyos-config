@@ -1,0 +1,129 @@
+#cloud-config
+
+users:
+  - name: sky
+    shell: /bin/bash
+    groups:
+      - admin
+    ssh_authorized_keys:
+      - github:samip5
+
+install:
+  auto: true
+  device: /dev/sda
+  reboot: true
+  grub_options:
+    extra_cmdline: >-
+      video=1280x720
+
+bundles:
+  - targets:
+      # # If this is merged, use the commented out line instead
+      # # https://github.com/kairos-io/community-bundles/pull/53
+      # - run://quay.io/kairos/community-bundles:flux_latest
+      - run://docker.io/tyzbit/flux:latest
+
+growpart:
+  devices: ["/"]
+
+kubevip:
+  enabled: false
+
+stages:
+  after-install-chroot:
+    # # -- (only `commands`,`entities` and `files` may have templating)
+    - name: "Configure as control plane or worker"
+      files:
+        - path: /oem/60_k3s_config.yaml
+          content: |
+            #cloud-config
+            {{- $control := false -}}
+            {{- $first := false -}}
+            {{- $macs := list "6c:4b:90:2d:a7:dd" -}}
+            {{- range $net := .Values.network -}}
+              {{- if has $net.macaddress $macs -}}
+                {{- $control = true -}}
+              {{- end -}}
+              {{- if eq $net.macaddress (first $macs) -}}
+                {{- $first = true -}}
+              {{ end -}}
+            {{- end -}}
+            {{/* I use the character range of https://en.bitcoin.it/wiki/Bech32 */}}
+            {{/* so there are no lookalike characters */}}
+            {{- $id := regexReplaceAll "[^qpzry9x8gf2tvdw0s3jn54khce6mua7l]" (randAlpha 32 | lower) "" | trunc 5 -}}
+            {{- if $control }}
+            hostname: nebula-{{ $id }}
+            k3s:
+              enabled: true
+              args:
+            {{- if $first }}
+                - --cluster-init
+            {{- end }}
+                - --disable traefik,servicelb,metrics-server,local-storage,coredns,flannel
+                - --flannel-backend none
+                - --disable-network-policy
+                - --disable-kube-proxy
+                - --disable-cloud-controller
+                - --cluster-cidr 10.244.0.0/16,fddf:f7bc:9670::/48
+                - --service-cidr 10.96.0.0/16,2001:14ba:16fd:961d::1e:0/112
+                - --write-kubeconfig-mode 0644
+                - --node-taint node-role.kubernetes.io/control-plane=effect:NoSchedule
+            {{- else }}
+            hostname: nebula-{{ $id }}
+            k3s-agent:
+              enabled: true
+            {{- end }}
+
+    # -- This is needed now so we can add the SOPS secret
+    - name: "Add flux-system namespace manifest"
+      files:
+        - path: /var/lib/rancher/k3s/server/manifests/flux-system.yaml
+          content: |
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: flux-system
+
+  boot:
+    - name: "Set up various kube environment variables"
+      environment:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+        CONTAINERD_ADDRESS: /run/k3s/containerd/containerd.sock
+        CONTAINERD_NAMESPACE: k8s.io
+
+    # - name: "Bootstrap with Flux"
+    #   commands:
+    #     - bash /usr/local/lib/extensions/flux/bootstrap.sh &
+
+# # p2p is commented out because while I'd love to use it,
+# # I want to be weird and set different hostnames for control plane nodes
+# # and workers, and that requires me to template the k3s configuration
+# # like I do above
+# # See https://github.com/kairos-io/kairos/issues/1877
+# p2p:
+#   network_id: corpus
+#   network_token: [[.p2p.network_token]]
+#   dns: false
+#   # disable_dht: true
+#   auto:
+#     enable: true
+#     ha:
+#       enable: true
+#       # -- ADDITIONAL control plane nodes
+#       # master_nodes: 1
+#   vpn:
+#     create: false
+#     enable: false
+#     # env:
+#       # DNSFORWARD: "true"
+#       # DNSCACHESIZE: "200"
+#       # DNSFORWARDSERVER: "192.168.1.1:53"
+
+# -- Bundle configs
+# -- Flux
+flux:
+  github:
+    owner: samip5
+    repository: k8s-cluster
+    path: k8s/nebula
+    components-extra: image-reflector-controller,image-automation-controller
