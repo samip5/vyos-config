@@ -93,6 +93,20 @@ set container name librenms-redis environment TZ value 'Europe/Helsinki'
 set container name librenms-redis image 'redis:7.2-alpine'
 set container name librenms-redis network containers address '172.16.9.23'
 
+set container name netboot allow-host-networks
+set container name netboot cap-add 'net-bind-service'
+set container name netboot environment NGINX_PORT value '8000'
+set container name netboot image 'ghcr.io/netbootxyz/netbootxyz:0.7.1-nbxyz1'
+set container name netboot memory '0'
+set container name netboot restart 'on-failure'
+set container name netboot shared-memory '0'
+set container name netboot volume assets destination '/assets'
+set container name netboot volume assets mode 'rw'
+set container name netboot volume assets source '/config/containers/netboot/assets'
+set container name netboot volume config destination '/config'
+set container name netboot volume config mode 'rw'
+set container name netboot volume config source '/config/containers/netboot/config'
+
 set container name node-exporter allow-host-networks
 set container name node-exporter environment procfs value '/host/proc'
 set container name node-exporter environment rootfs value '/host/rootfs'
