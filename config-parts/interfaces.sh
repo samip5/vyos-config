@@ -7,7 +7,9 @@ set interfaces ethernet eth0 vif 10 address '192.168.2.1/24'
 set interfaces ethernet eth0 vif 50 address '10.0.50.1/24'
 set interfaces ethernet eth0 vif 99 address '192.168.99.1/24'
 set interfaces ethernet eth0 vif 105 address '10.0.105.1/24'
+set interfaces ethernet eth0 vif 105 address 'fd9d:7a72:44eb:c::1/64'
 set interfaces ethernet eth0 vif 110 address '10.0.110.1/24'
+set interfaces ethernet eth0 vif 110 address 'fd9d:7a72:44eb:d::1/6'
 set interfaces ethernet eth0 vif 201 address 'dhcp'
 set interfaces ethernet eth0 vif 201 disable
 
