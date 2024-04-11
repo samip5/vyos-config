@@ -55,7 +55,7 @@ set service dhcp-server shared-network-name MGMNT subnet 192.168.99.0/24 static-
 set service dhcp-server shared-network-name MGMNT subnet 192.168.99.0/24 static-mapping BedroomSwitch mac-address 'ac:8b:a9:af:b0:30'
 set service dhcp-server shared-network-name MGMNT subnet 192.168.99.0/24 subnet-parameters 'option ubnt.unifi-address 172.16.9.10;'
 
-# Production kubernetes
+# Production Kubernetes VLAN
 set service dhcp-server shared-network-name VLAN105 subnet 10.0.105.0/24 bootfile-name 'netboot.xyz.efi'
 set service dhcp-server shared-network-name VLAN105 subnet 10.0.105.0/24 bootfile-server '10.0.105.250'
 set service dhcp-server shared-network-name VLAN105 subnet 10.0.105.0/24 default-router '10.0.105.1'
