@@ -125,6 +125,18 @@ set container name node-exporter volume sysfs destination '/host/sys'
 set container name node-exporter volume sysfs mode 'ro'
 set container name node-exporter volume sysfs source '/sys'
 
+set container name udp-broadcast-relay-mdns allow-host-networks
+set container name udp-broadcast-relay-mdns cap-add 'net-raw'
+set container name udp-broadcast-relay-mdns environment CFG_DEV value 'eth0.105;eth0.10'
+set container name udp-broadcast-relay-mdns environment CFG_ID value '2'
+set container name udp-broadcast-relay-mdns environment CFG_MULTICAST value '224.0.0.251'
+set container name udp-broadcast-relay-mdns environment CFG_PORT value '5353'
+set container name udp-broadcast-relay-mdns environment SEPARATOR value ';'
+set container name udp-broadcast-relay-mdns image 'ghcr.io/onedr0p/udp-broadcast-relay-redux:1.0.28'
+set container name udp-broadcast-relay-mdns memory '0'
+set container name udp-broadcast-relay-mdns restart 'on-failure'
+set container name udp-broadcast-relay-mdns shared-memory '0'
+
 set container name unifi environment RUNAS_UID0 value 'false'
 set container name unifi environment TZ value 'Europe/Helsinki'
 set container name unifi environment UNIFI_GID value '999'
